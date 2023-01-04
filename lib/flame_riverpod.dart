@@ -3,6 +3,7 @@
 /// application into your game.
 library flame_riverpod;
 
+export 'src/component_ref.dart';
 export 'src/game_provider.dart';
 export 'src/riverpod_aware_game.dart';
 export 'src/riverpod_game_widget.dart';
