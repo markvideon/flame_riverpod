@@ -1,7 +1,6 @@
 name: flame_riverpod
-description: Widgets, providers, and an example project for using Riverpod in conjunction with Flame, to share state 
-  from the game into other parts of your application, or from other parts of your application into your game.
-version: 1.0.0
+description: Widgets, providers, and an example project for using Riverpod in conjunction with Flame.
+version: 1.0.0+1
 homepage: https://markvideon.dev
 
 environment:

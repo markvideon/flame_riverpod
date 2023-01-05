@@ -12,7 +12,8 @@ abstract class RiverpodAwareGame extends Game with RiverpodAwareGameMixin {
   }
 }
 
-abstract class RiverpodAwareFlameGame extends FlameGame with RiverpodAwareGameMixin {
+abstract class RiverpodAwareFlameGame extends FlameGame
+    with RiverpodAwareGameMixin {
   RiverpodAwareFlameGame(WidgetRef ref) {
     this.ref = ComponentRef(ref);
   }

@@ -23,15 +23,11 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Expanded(
-            child: FlutterCountingComponent()
-          ),
-          Expanded(
-            child: RiverpodGameWidget.initialiseWithGame(game: RefExampleGame(ref))
-          )
+      home: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const Expanded(child: FlutterCountingComponent()),
+        Expanded(
+            child: RiverpodGameWidget.initialiseWithGame(
+                game: RefExampleGame(ref)))
       ]),
     );
   }
@@ -42,7 +38,8 @@ class FlutterCountingComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle = Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white);
+    final textStyle =
+        Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white);
 
     final stream = ref.watch(countingStreamProvider);
     return Material(
@@ -51,10 +48,9 @@ class FlutterCountingComponent extends ConsumerWidget {
         children: [
           Text('Flutter', style: textStyle),
           stream.when(
-            data: (value) => Text('$value', style: textStyle),
-            error: (error, stackTrace) => Text('$error', style: textStyle),
-            loading: () => Text('Loading...', style: textStyle)
-          )
+              data: (value) => Text('$value', style: textStyle),
+              error: (error, stackTrace) => Text('$error', style: textStyle),
+              loading: () => Text('Loading...', style: textStyle))
         ],
       ),
     );

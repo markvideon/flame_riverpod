@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,8 +21,8 @@ class ComponentRef {
     void Function(Object error, StackTrace stackTrace)? onError,
     bool fireImmediately = true,
   }) {
-    return ref.listenManual<T>(
-        provider, onChange, onError: onError, fireImmediately: fireImmediately);
+    return ref.listenManual<T>(provider, onChange,
+        onError: onError, fireImmediately: fireImmediately);
   }
 
   T read<T>(Provider<T> provider) {
