@@ -11,14 +11,9 @@ void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerStatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  ConsumerState<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,7 +22,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         const Expanded(child: FlutterCountingComponent()),
         Expanded(
             child: RiverpodGameWidget.initialiseWithGame(
-                game: RefExampleGame(ref)))
+              uninitialisedGame: (ref) => RefExampleGame(ref)))
       ]),
     );
   }
