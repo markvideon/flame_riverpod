@@ -1,7 +1,7 @@
 name: flame_riverpod
 description: A new Flutter package project.
 version: 1.0.0
-homepage: markvideon.dev
+homepage: https://markvideon.dev
 
 environment:
   sdk: '>=2.18.5 <3.0.0'
