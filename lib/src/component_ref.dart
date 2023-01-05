@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// A wrapper around [WidgetRef]. Methods that correspond to interactions with
@@ -6,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ComponentRef {
   ComponentRef(this.ref);
   WidgetRef ref;
+
+  BuildContext get context => ref.context;
 
   bool exists(ProviderBase<Object?> provider) {
     return ref.exists(provider);

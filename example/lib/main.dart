@@ -1,12 +1,14 @@
+import 'package:flame/components.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final myStreamProvider = StreamProvider<int>((ref) => Stream.periodic(Duration(seconds: 1), (inc) => inc));
-final myIntProvider = Provider((ref) => 7);
+final countingStreamProvider = StreamProvider<int>((ref) {
+  return Stream.periodic(const Duration(seconds: 1), (inc) => inc);
+});
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {
@@ -21,7 +23,40 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: RiverpodGameWidget.initialiseWithGame(game: RefExampleGame(ref)),
+      home: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Expanded(
+            child: FlutterCountingComponent()
+          ),
+          Expanded(
+            child: RiverpodGameWidget.initialiseWithGame(game: RefExampleGame(ref))
+          )
+      ]),
+    );
+  }
+}
+
+class FlutterCountingComponent extends ConsumerWidget {
+  const FlutterCountingComponent({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textStyle = Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white);
+
+    final stream = ref.watch(countingStreamProvider);
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        children: [
+          Text('Flutter', style: textStyle),
+          stream.when(
+            data: (value) => Text('$value', style: textStyle),
+            error: (error, stackTrace) => Text('$error', style: textStyle),
+            loading: () => Text('Loading...', style: textStyle)
+          )
+        ],
+      ),
     );
   }
 }
@@ -32,5 +67,35 @@ class RefExampleGame extends RiverpodAwareFlameGame {
   @override
   onLoad() async {
     await super.onLoad();
+    add(TextComponent(text: 'Flame'));
+    add(RiverpodAwareTextComponent(ref));
+  }
+}
+
+class RiverpodAwareTextComponent extends PositionComponent {
+  RiverpodAwareTextComponent(this.ref);
+
+  ComponentRef ref;
+  late ProviderSubscription<AsyncValue<int>> subscription;
+  late TextComponent textComponent;
+  int currentValue = 0;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(textComponent = TextComponent(position: position + Vector2(0, 27)));
+
+    subscription = ref.listenManual(countingStreamProvider, (p0, p1) {
+      if (p1.hasValue) {
+        currentValue = p1.value!;
+        textComponent.text = '$currentValue';
+      }
+    });
+  }
+
+  @override
+  void onRemove() {
+    subscription.close();
+    super.onRemove();
   }
 }

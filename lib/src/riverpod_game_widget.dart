@@ -18,15 +18,22 @@ class RiverpodGameWidget extends ConsumerStatefulWidget {
 class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
   @override
   void initState() {
-    if (widget.game is RiverpodAwareGameMixin) {
-      ref.read(riverpodAwareGameProvider.notifier).set(widget.game!);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.game is RiverpodAwareGameMixin) {
+        ref.read(riverpodAwareGameProvider.notifier).set(widget.game!);
+      }
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final game = ref.watch(riverpodAwareGameProvider);
+
+    if (game is! Game) {
+      return Container();
+    }
+
     return GameWidget(game: game!);
   }
 }
