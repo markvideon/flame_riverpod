@@ -1,39 +1,59 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
-
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Helpers for using Riverpod in conjunction with Flame - to share state from
+the game into other parts of your application, or from other parts of your
+application into your game.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Check out the example package to see a FlameGame with a custom Component being updated alongside a comparable Flutter 
+widget. Both depend on a StreamProvider.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+RiverpodGameWidget is a simple ConsumerStatefulWidget wrapper around a GameWidget. 
+
+`ComponentRef` should be passed from your RiverpodAwareGame to any Components interested in updates from a Provider. 
+It exposes a subset of the functionality users of Riverpod will be familiar with - this is because Components are *not* 
+Widgets! 
+
+In Riverpod with Flame, you should use `listenManual` to subscribe to updates from a provider, and remember to close the 
+subscription at the appropriate point in the Components lifecycle. Alternatively, you could use `ref.read` as you would 
+elsewhere in Flutter.
+
 
 ```dart
-const like = 'sample';
+/// An excerpt from the Example. Check it out!
+class RiverpodAwareTextComponent extends PositionComponent {
+  RiverpodAwareTextComponent(this.ref);
+
+  /// ComponentRef is a wrapper around WidgetRef and exposes 
+  /// a subset of its API. 
+  /// 
+  /// It does not expose [ref.watch] from Riverpod as it is 
+  /// not applicable to our use case!
+  ComponentRef ref;
+
+  /// Remember to close your subscriptions as appropriate.
+  late ProviderSubscription<AsyncValue<int>> subscription;
+  late TextComponent textComponent;
+  int currentValue = 0;
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(textComponent = TextComponent(position: position + Vector2(0, 27)));
+
+    subscription = ref.listenManual(countingStreamProvider, (p0, p1) {
+      if (p1.hasValue) {
+        currentValue = p1.value!;
+        textComponent.text = '$currentValue';
+      }
+    });
+  }
+
+  @override
+  void onRemove() {
+    subscription.close();
+    super.onRemove();
+  }
+}
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.

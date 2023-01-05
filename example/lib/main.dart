@@ -75,7 +75,14 @@ class RefExampleGame extends RiverpodAwareFlameGame {
 class RiverpodAwareTextComponent extends PositionComponent {
   RiverpodAwareTextComponent(this.ref);
 
+  /// ComponentRef is a wrapper around WidgetRef and exposes
+  /// a subset of its API.
+  ///
+  /// It does not expose [ref.watch] from Riverpod as it is
+  /// not applicable to our use case!
   ComponentRef ref;
+
+  /// Remember to close your subscriptions as appropriate.
   late ProviderSubscription<AsyncValue<int>> subscription;
   late TextComponent textComponent;
   int currentValue = 0;
