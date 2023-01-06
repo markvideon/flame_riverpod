@@ -1,3 +1,7 @@
+## 1.1.0+1
+
+* Correction to README to reflect API change.
+
 ## 1.1.0
 
 * Added [RiverpodComponentMixin] to handle disposing of [ProviderSubscription]s.
