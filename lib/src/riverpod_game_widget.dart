@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'riverpod_aware_game.dart';
 
 class RiverpodGameWidget extends ConsumerStatefulWidget {
-  const RiverpodGameWidget.readFromProvider({super.key}) : uninitialisedGame = null;
-  const RiverpodGameWidget.initialiseWithGame({super.key, required this.uninitialisedGame});
+  const RiverpodGameWidget.readFromProvider({super.key})
+      : uninitialisedGame = null;
+  const RiverpodGameWidget.initialiseWithGame(
+      {super.key, required this.uninitialisedGame});
 
   final RiverpodAwareGameMixin Function(WidgetRef ref)? uninitialisedGame;
 
@@ -19,8 +21,11 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.uninitialisedGame is RiverpodAwareGameMixin Function(WidgetRef ref)) {
-        ref.read(riverpodAwareGameProvider.notifier).set(widget.uninitialisedGame!(ref));
+      if (widget.uninitialisedGame is RiverpodAwareGameMixin Function(
+          WidgetRef ref)) {
+        ref
+            .read(riverpodAwareGameProvider.notifier)
+            .set(widget.uninitialisedGame!(ref));
       }
     });
     super.initState();

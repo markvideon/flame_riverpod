@@ -7,15 +7,11 @@ mixin RiverpodComponentMixin on Component {
   late ComponentRef ref;
   List<ProviderSubscription> _subscriptions = [];
 
-  listen<T>(ProviderListenable<T> provider,
-    void Function(T?, T) onChange, {
-    void Function(Object error, StackTrace stackTrace)? onError
-  }) {
-    _subscriptions.add(
-      ref.listenManual(provider, (p0, p1) {
-        onChange(p0, p1);
-      }, onError: onError)
-    );
+  listen<T>(ProviderListenable<T> provider, void Function(T?, T) onChange,
+      {void Function(Object error, StackTrace stackTrace)? onError}) {
+    _subscriptions.add(ref.listenManual(provider, (p0, p1) {
+      onChange(p0, p1);
+    }, onError: onError));
   }
 
   @override

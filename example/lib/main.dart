@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         const Expanded(child: FlutterCountingComponent()),
         Expanded(
             child: RiverpodGameWidget.initialiseWithGame(
-              uninitialisedGame: (ref) => RefExampleGame(ref)))
+                uninitialisedGame: (ref) => RefExampleGame(ref)))
       ]),
     );
   }
@@ -65,7 +65,8 @@ class RefExampleGame extends RiverpodAwareFlameGame {
   }
 }
 
-class RiverpodAwareTextComponent extends PositionComponent with RiverpodComponentMixin {
+class RiverpodAwareTextComponent extends PositionComponent
+    with RiverpodComponentMixin {
   // ComponentRef is a wrapper around WidgetRef and exposes
   // a subset of its API.
   RiverpodAwareTextComponent(ComponentRef ref) {
@@ -82,7 +83,6 @@ class RiverpodAwareTextComponent extends PositionComponent with RiverpodComponen
     await super.onLoad();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
 
-    // Subscription is closed during [onRemove] in [RiverpodComponentMixin]
     listen(countingStreamProvider, (p0, p1) {
       if (p1.hasValue) {
         currentValue = p1.value!;

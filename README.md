@@ -29,13 +29,13 @@ class RiverpodAwareTextComponent extends PositionComponent with RiverpodComponen
     this.ref = ref;
   }
 
-  // Remember to close your subscriptions as appropriate.
-  late ProviderSubscription<AsyncValue<int>> subscription;
   late TextComponent textComponent;
   int currentValue = 0;
 
+  /// [onMount] should be used over [onLoad], as subscriptions are cancelled
+  /// inside [onRemove], which is only called if the [Component] was mounted.
   @override
-  Future<void> onLoad() async {
+  Future<void> onMount() async {
     await super.onLoad();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
 
