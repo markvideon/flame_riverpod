@@ -79,8 +79,8 @@ class RiverpodAwareTextComponent extends PositionComponent
   /// [onMount] should be used over [onLoad], as subscriptions are cancelled
   /// inside [onRemove], which is only called if the [Component] was mounted.
   @override
-  Future<void> onMount() async {
-    await super.onLoad();
+  void onMount() {
+    super.onMount();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
 
     listen(countingStreamProvider, (p0, p1) {

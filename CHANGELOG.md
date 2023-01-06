@@ -1,3 +1,7 @@
+## 1.1.0+2
+
+* Another correction to README and example code. onMount should not call super.onLoad.
+
 ## 1.1.0+1
 
 * Correction to README to reflect API change.
