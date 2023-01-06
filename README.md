@@ -15,9 +15,8 @@ RiverpodGameWidget is a simple ConsumerStatefulWidget wrapper around a GameWidge
 It exposes a subset of the functionality users of Riverpod will be familiar with - this is because Components are *not* 
 Widgets! 
 
-In Riverpod with Flame, you should use `listenManual` to subscribe to updates from a provider, and remember to close the 
-subscription at the appropriate point in the Components lifecycle. Alternatively, you could use `ref.read` as you would 
-elsewhere in Flutter.
+In Riverpod with Flame, you should use `listen` to subscribe to updates from a provider. Alternatively, you could use 
+`ref.read` as you would elsewhere in Flutter.
 
 
 ```dart
