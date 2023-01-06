@@ -22,17 +22,14 @@ elsewhere in Flutter.
 
 ```dart
 /// An excerpt from the Example. Check it out!
-class RiverpodAwareTextComponent extends PositionComponent {
-  RiverpodAwareTextComponent(this.ref);
+class RiverpodAwareTextComponent extends PositionComponent with RiverpodComponentMixin {
+  // ComponentRef is a wrapper around WidgetRef and exposes
+  // a subset of its API.
+  RiverpodAwareTextComponent(ComponentRef ref) {
+    this.ref = ref;
+  }
 
-  /// ComponentRef is a wrapper around WidgetRef and exposes 
-  /// a subset of its API. 
-  /// 
-  /// It does not expose [ref.watch] from Riverpod as it is 
-  /// not applicable to our use case!
-  ComponentRef ref;
-
-  /// Remember to close your subscriptions as appropriate.
+  // Remember to close your subscriptions as appropriate.
   late ProviderSubscription<AsyncValue<int>> subscription;
   late TextComponent textComponent;
   int currentValue = 0;
@@ -42,18 +39,12 @@ class RiverpodAwareTextComponent extends PositionComponent {
     await super.onLoad();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
 
-    subscription = ref.listenManual(countingStreamProvider, (p0, p1) {
+    listen(countingStreamProvider, (p0, p1) {
       if (p1.hasValue) {
         currentValue = p1.value!;
         textComponent.text = '$currentValue';
       }
     });
-  }
-
-  @override
-  void onRemove() {
-    subscription.close();
-    super.onRemove();
   }
 }
 ```

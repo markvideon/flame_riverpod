@@ -1,4 +1,6 @@
-import 'package:flame/components.dart';
+import 'dart:async';
+
+import 'package:flame/components.dart' hide Timer;
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,37 +65,29 @@ class RefExampleGame extends RiverpodAwareFlameGame {
   }
 }
 
-class RiverpodAwareTextComponent extends PositionComponent {
-  RiverpodAwareTextComponent(this.ref);
+class RiverpodAwareTextComponent extends PositionComponent with RiverpodComponentMixin {
+  // ComponentRef is a wrapper around WidgetRef and exposes
+  // a subset of its API.
+  RiverpodAwareTextComponent(ComponentRef ref) {
+    this.ref = ref;
+  }
 
-  /// ComponentRef is a wrapper around WidgetRef and exposes
-  /// a subset of its API.
-  ///
-  /// It does not expose [ref.watch] from Riverpod as it is
-  /// not applicable to our use case!
-  ComponentRef ref;
-
-  /// Remember to close your subscriptions as appropriate.
-  late ProviderSubscription<AsyncValue<int>> subscription;
   late TextComponent textComponent;
   int currentValue = 0;
 
+  /// [onMount] should be used over [onLoad], as subscriptions are cancelled
+  /// inside [onRemove], which is only called if the [Component] was mounted.
   @override
-  Future<void> onLoad() async {
+  Future<void> onMount() async {
     await super.onLoad();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
 
-    subscription = ref.listenManual(countingStreamProvider, (p0, p1) {
+    // Subscription is closed during [onRemove] in [RiverpodComponentMixin]
+    listen(countingStreamProvider, (p0, p1) {
       if (p1.hasValue) {
         currentValue = p1.value!;
         textComponent.text = '$currentValue';
       }
     });
-  }
-
-  @override
-  void onRemove() {
-    subscription.close();
-    super.onRemove();
   }
 }
