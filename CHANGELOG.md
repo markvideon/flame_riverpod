@@ -1,3 +1,9 @@
+## 2.0.0
+
+* Pruned the public API, removing custom widget definitions (these have now been defined inside the example for 
+reference)
+* Renamed [RiverpodAwareGameMixin] -> [HasComponentRef] to bring closer to the Flame 'house-style' for mixins.
+
 ## 1.1.0+2
 
 * Another correction to README and example code. onMount should not call super.onLoad.
