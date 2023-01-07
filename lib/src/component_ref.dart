@@ -1,5 +1,10 @@
+import 'package:flame/game.dart' show Game;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+mixin HasComponentRef on Game {
+  late ComponentRef ref;
+}
 
 /// A wrapper around [WidgetRef]. Methods that correspond to interactions with
 /// the widget tree, such as [WidgetRef.watch] are not exposed.

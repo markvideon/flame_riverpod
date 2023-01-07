@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flame/components.dart' hide Timer;
+import 'package:flame/game.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -54,14 +55,54 @@ class FlutterCountingComponent extends ConsumerWidget {
   }
 }
 
-class RefExampleGame extends RiverpodAwareFlameGame {
-  RefExampleGame(super.ref);
+class RefExampleGame extends FlameGame with HasComponentRef {
+  RefExampleGame(WidgetRef ref) {
+    this.ref = ComponentRef(ref);
+  }
 
   @override
   onLoad() async {
     await super.onLoad();
     add(TextComponent(text: 'Flame'));
     add(RiverpodAwareTextComponent(ref));
+  }
+}
+
+class RiverpodGameWidget extends ConsumerStatefulWidget {
+  const RiverpodGameWidget.readFromProvider({super.key})
+      : uninitialisedGame = null;
+  const RiverpodGameWidget.initialiseWithGame(
+      {super.key, required this.uninitialisedGame});
+
+  final HasComponentRef Function(WidgetRef ref)? uninitialisedGame;
+
+  @override
+  ConsumerState<RiverpodGameWidget> createState() => _RiverpodGameWidgetState();
+}
+
+class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (widget.uninitialisedGame is HasComponentRef Function(
+          WidgetRef ref)) {
+        ref
+            .read(riverpodAwareGameProvider.notifier)
+            .set(widget.uninitialisedGame!(ref));
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final game = ref.watch(riverpodAwareGameProvider);
+
+    if (game is! Game) {
+      return Container();
+    }
+
+    return GameWidget(game: game!);
   }
 }
 
