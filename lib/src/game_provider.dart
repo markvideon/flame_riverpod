@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Simple provider that returns a [RiverpodAwareGame] instance.
 final riverpodAwareGameProvider =
-    StateNotifierProvider<RiverpodAwareGameNotifier, RiverpodAwareGameMixin?>(
+    StateNotifierProvider<RiverpodAwareGameNotifier, HasComponentReference?>(
         (ref) {
   return RiverpodAwareGameNotifier();
 });
 
 /// Simple [StateNotifier] that holds the current [RiverpodAwareGame] instance.
-class RiverpodAwareGameNotifier extends StateNotifier<RiverpodAwareGameMixin?> {
+class RiverpodAwareGameNotifier extends StateNotifier<HasComponentReference?> {
   RiverpodAwareGameNotifier() : super(null);
 
-  set(RiverpodAwareGameMixin candidate) {
+  set(HasComponentReference candidate) {
     state = candidate;
   }
 }

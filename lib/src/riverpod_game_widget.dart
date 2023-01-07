@@ -11,7 +11,7 @@ class RiverpodGameWidget extends ConsumerStatefulWidget {
   const RiverpodGameWidget.initialiseWithGame(
       {super.key, required this.uninitialisedGame});
 
-  final RiverpodAwareGameMixin Function(WidgetRef ref)? uninitialisedGame;
+  final HasComponentReference Function(WidgetRef ref)? uninitialisedGame;
 
   @override
   ConsumerState<RiverpodGameWidget> createState() => _RiverpodGameWidgetState();
@@ -21,7 +21,7 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.uninitialisedGame is RiverpodAwareGameMixin Function(
+      if (widget.uninitialisedGame is HasComponentReference Function(
           WidgetRef ref)) {
         ref
             .read(riverpodAwareGameProvider.notifier)
