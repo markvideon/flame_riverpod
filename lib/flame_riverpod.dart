@@ -4,5 +4,4 @@
 library flame_riverpod;
 
 export 'src/component_ref.dart';
-export 'src/game_provider.dart';
 export 'src/has_component_ref_mixin.dart';

@@ -10,6 +10,21 @@ final countingStreamProvider = StreamProvider<int>((ref) {
   return Stream.periodic(const Duration(seconds: 1), (inc) => inc);
 });
 
+/// Simple provider that returns a [FlameGame] instance.
+final riverpodAwareGameProvider =
+StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
+  return RiverpodAwareGameNotifier();
+});
+
+/// Simple [StateNotifier] that holds the current [FlameGame] instance.
+class RiverpodAwareGameNotifier extends StateNotifier<FlameGame?> {
+  RiverpodAwareGameNotifier() : super(null);
+
+  set(FlameGame candidate) {
+    state = candidate;
+  }
+}
+
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }

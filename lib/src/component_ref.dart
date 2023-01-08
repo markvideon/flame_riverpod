@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// A wrapper around [WidgetRef]. Methods that correspond to interactions with
 /// the widget tree, such as [WidgetRef.watch] are not exposed.
 class ComponentRef {
-  ComponentRef(this.widgetRef);
-  WidgetRef widgetRef;
+  ComponentRef(this._widgetRef);
+  WidgetRef _widgetRef;
 
-  BuildContext get context => widgetRef.context;
+  BuildContext get context => _widgetRef.context;
 
   bool exists(ProviderBase<Object?> provider) {
-    return widgetRef.exists(provider);
+    return _widgetRef.exists(provider);
   }
 
   /// A subscription that should be closed at the appropriate point in the
@@ -21,19 +21,19 @@ class ComponentRef {
     void Function(Object error, StackTrace stackTrace)? onError,
     bool fireImmediately = true,
   }) {
-    return widgetRef.listenManual<T>(provider, onChange,
+    return _widgetRef.listenManual<T>(provider, onChange,
         onError: onError, fireImmediately: fireImmediately);
   }
 
   T read<T>(Provider<T> provider) {
-    return widgetRef.read(provider);
+    return _widgetRef.read(provider);
   }
 
   T refresh<T>(Refreshable<T> provider) {
-    return widgetRef.refresh(provider);
+    return _widgetRef.refresh(provider);
   }
 
   void invalidate(ProviderOrFamily provider) {
-    widgetRef.invalidate(provider);
+    _widgetRef.invalidate(provider);
   }
 }
