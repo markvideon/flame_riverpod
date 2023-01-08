@@ -1,3 +1,15 @@
+## 3.0.0
+
+* Changes to focus on [FlameGame].
+  * [riverpodAwareGameProvider] now expects a [FlameGame].
+  * Removed the [HasComponentRef] on Game.
+  * Renamed [RiverpodComponentMixin] to [HasComponentRef]
+* [HasComponentRef] now has a static setter for a WidgetRef. Components that use the new [HasComponentRef] mixin no
+longer need to explicitly provide a [ComponentRef].
+* Renamed the [WidgetRef] property on the [ComponentRef] to [widgetRef].
+* Updated Example to reflect changes.
+* Updated README to reflect changes.
+
 ## 2.0.0
 
 * Pruned the public API, removing custom widget definitions (these have now been defined inside the example for 
