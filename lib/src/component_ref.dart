@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// the widget tree, such as [WidgetRef.watch] are not exposed.
 class ComponentRef {
   ComponentRef(this._widgetRef);
-  WidgetRef _widgetRef;
+  final WidgetRef _widgetRef;
 
   BuildContext get context => _widgetRef.context;
 
