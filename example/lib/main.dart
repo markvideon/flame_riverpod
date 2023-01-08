@@ -12,7 +12,7 @@ final countingStreamProvider = StreamProvider<int>((ref) {
 
 /// Simple provider that returns a [FlameGame] instance.
 final riverpodAwareGameProvider =
-StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
+    StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
   return RiverpodAwareGameNotifier();
 });
 
