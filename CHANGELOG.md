@@ -1,3 +1,8 @@
+## 4.0.0
+
+* Made [WidgetRef] property on [ComponentRef] private. It should not be accessed directly. 
+* Removed the [riverpodAwareGameProvider]. If required, this is better handled at the application-level.
+
 ## 3.0.0
 
 * Changes to focus on [FlameGame].
