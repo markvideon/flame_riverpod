@@ -86,8 +86,7 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.uninitialisedGame is FlameGame Function(
-          WidgetRef ref)) {
+      if (widget.uninitialisedGame is FlameGame Function(WidgetRef ref)) {
         ref
             .read(riverpodAwareGameProvider.notifier)
             .set(widget.uninitialisedGame!(ref));
@@ -110,7 +109,6 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
 
 class RiverpodAwareTextComponent extends PositionComponent
     with HasComponentRef {
-
   late TextComponent textComponent;
   int currentValue = 0;
 

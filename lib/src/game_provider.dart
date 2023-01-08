@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Simple provider that returns a [FlameGame] instance.
 final riverpodAwareGameProvider =
-    StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>(
-        (ref) {
+    StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
   return RiverpodAwareGameNotifier();
 });
 
