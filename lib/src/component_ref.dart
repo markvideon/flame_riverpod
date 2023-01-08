@@ -2,20 +2,16 @@ import 'package:flame/game.dart' show Game;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-mixin HasComponentRef on Game {
-  late ComponentRef ref;
-}
-
 /// A wrapper around [WidgetRef]. Methods that correspond to interactions with
 /// the widget tree, such as [WidgetRef.watch] are not exposed.
 class ComponentRef {
-  ComponentRef(this.ref);
-  WidgetRef ref;
+  ComponentRef(this.widgetRef);
+  WidgetRef widgetRef;
 
-  BuildContext get context => ref.context;
+  BuildContext get context => widgetRef.context;
 
   bool exists(ProviderBase<Object?> provider) {
-    return ref.exists(provider);
+    return widgetRef.exists(provider);
   }
 
   /// A subscription that should be closed at the appropriate point in the
@@ -26,19 +22,19 @@ class ComponentRef {
     void Function(Object error, StackTrace stackTrace)? onError,
     bool fireImmediately = true,
   }) {
-    return ref.listenManual<T>(provider, onChange,
+    return widgetRef.listenManual<T>(provider, onChange,
         onError: onError, fireImmediately: fireImmediately);
   }
 
   T read<T>(Provider<T> provider) {
-    return ref.read(provider);
+    return widgetRef.read(provider);
   }
 
   T refresh<T>(Refreshable<T> provider) {
-    return ref.refresh(provider);
+    return widgetRef.refresh(provider);
   }
 
   void invalidate(ProviderOrFamily provider) {
-    ref.invalidate(provider);
+    widgetRef.invalidate(provider);
   }
 }

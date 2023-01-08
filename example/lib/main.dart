@@ -57,14 +57,16 @@ class FlutterCountingComponent extends ConsumerWidget {
 
 class RefExampleGame extends FlameGame with HasComponentRef {
   RefExampleGame(WidgetRef ref) {
-    this.ref = ComponentRef(ref);
+    // Note: WidgetRef is not stored and is used to build a [ComponentRef],
+    // a wrapper around it.
+    HasComponentRef.widgetRef = ref;
   }
 
   @override
   onLoad() async {
     await super.onLoad();
     add(TextComponent(text: 'Flame'));
-    add(RiverpodAwareTextComponent(ref));
+    add(RiverpodAwareTextComponent());
   }
 }
 
@@ -74,7 +76,7 @@ class RiverpodGameWidget extends ConsumerStatefulWidget {
   const RiverpodGameWidget.initialiseWithGame(
       {super.key, required this.uninitialisedGame});
 
-  final HasComponentRef Function(WidgetRef ref)? uninitialisedGame;
+  final FlameGame Function(WidgetRef ref)? uninitialisedGame;
 
   @override
   ConsumerState<RiverpodGameWidget> createState() => _RiverpodGameWidgetState();
@@ -84,7 +86,7 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.uninitialisedGame is HasComponentRef Function(
+      if (widget.uninitialisedGame is FlameGame Function(
           WidgetRef ref)) {
         ref
             .read(riverpodAwareGameProvider.notifier)
@@ -107,23 +109,22 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
 }
 
 class RiverpodAwareTextComponent extends PositionComponent
-    with RiverpodComponentMixin {
-  // ComponentRef is a wrapper around WidgetRef and exposes
-  // a subset of its API.
-  RiverpodAwareTextComponent(ComponentRef ref) {
-    this.ref = ref;
-  }
+    with HasComponentRef {
 
   late TextComponent textComponent;
   int currentValue = 0;
 
-  /// [onMount] should be used over [onLoad], as subscriptions are cancelled
-  /// inside [onRemove], which is only called if the [Component] was mounted.
+  /// [onMount] should be used over [onLoad] to initialise subscriptions,
+  /// cancellation is handled for the user inside [onRemove],
+  /// which is only called if the [Component] was mounted.
   @override
   void onMount() {
     super.onMount();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
 
+    // "Watch" a provider using [listen] from the [HasComponentRef] mixin.
+    // Watch is not exposed directly as this would rebuild the ancestor that
+    // exposes the [WidgetRef] unnecessarily.
     listen(countingStreamProvider, (p0, p1) {
       if (p1.hasValue) {
         currentValue = p1.value!;

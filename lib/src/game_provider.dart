@@ -1,19 +1,18 @@
+import 'package:flame/game.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'component_ref.dart';
-
-/// Simple provider that returns a Riverpod-Aware Game instance.
+/// Simple provider that returns a [FlameGame] instance.
 final riverpodAwareGameProvider =
-    StateNotifierProvider<RiverpodAwareGameNotifier, HasComponentRef?>(
+    StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>(
         (ref) {
   return RiverpodAwareGameNotifier();
 });
 
-/// Simple [StateNotifier] that holds the current [RiverpodAwareGame] instance.
-class RiverpodAwareGameNotifier extends StateNotifier<HasComponentRef?> {
+/// Simple [StateNotifier] that holds the current [FlameGame] instance.
+class RiverpodAwareGameNotifier extends StateNotifier<FlameGame?> {
   RiverpodAwareGameNotifier() : super(null);
 
-  set(HasComponentRef candidate) {
+  set(FlameGame candidate) {
     state = candidate;
   }
 }
