@@ -1,3 +1,7 @@
+## 4.0.0+1
+
+* Miscellaneous tidy-up of package internals.
+
 ## 4.0.0
 
 * Made [WidgetRef] property on [ComponentRef] private. It should not be accessed directly. 

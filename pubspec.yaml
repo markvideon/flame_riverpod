@@ -1,6 +1,6 @@
 name: flame_riverpod
 description: Model classes and an example project for using Riverpod in conjunction with Flame.
-version: 4.0.0
+version: 4.0.0+1
 homepage: https://markvideon.dev
 
 environment:
