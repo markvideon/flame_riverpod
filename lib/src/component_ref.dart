@@ -25,7 +25,7 @@ class ComponentRef {
         onError: onError, fireImmediately: fireImmediately);
   }
 
-  T read<T>(Provider<T> provider) {
+  T read<T>(ProviderListenable<T> provider) {
     return _widgetRef.read(provider);
   }
 
