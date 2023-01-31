@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'component_ref.dart';
 
 mixin HasComponentRef on Component {
-  ComponentRef get ref => _reference ?? _findComponentRef();
+  ComponentRef get ref => _reference!;
   static ComponentRef? _reference;
   static set widgetRef(WidgetRef value) => _reference = ComponentRef(value);
 
@@ -13,13 +13,7 @@ mixin HasComponentRef on Component {
 
   @override
   onLoad() async {
-    _reference ??= _findComponentRef();
     await super.onLoad();
-  }
-
-  ComponentRef _findComponentRef<T>() {
-    final flameGameParent = super.findParent<FlameGame>();
-    return (flameGameParent as HasComponentRef)._findComponentRef();
   }
 
   listen<T>(ProviderListenable<T> provider, void Function(T?, T) onChange,
