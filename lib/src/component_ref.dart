@@ -21,8 +21,12 @@ class ComponentRef {
     void Function(Object error, StackTrace stackTrace)? onError,
     bool fireImmediately = true,
   }) {
-    return _widgetRef.listenManual<T>(provider, onChange,
-        onError: onError, fireImmediately: fireImmediately,);
+    return _widgetRef.listenManual<T>(
+      provider,
+      onChange,
+      onError: onError,
+      fireImmediately: fireImmediately,
+    );
   }
 
   T read<T>(ProviderListenable<T> provider) {

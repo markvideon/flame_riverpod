@@ -1,3 +1,7 @@
+## 4.0.0+2
+
+* Miscellaneous format post-processing on the files. 
+
 ## 4.0.0+1
 
 * Miscellaneous tidy-up of package internals.
@@ -5,7 +9,7 @@
 ## 4.0.0
 
 * Made [WidgetRef] property on [ComponentRef] private. It should not be accessed directly. 
-* Removed the [riverpodAwareGameProvider]. If required, this is better handled at the application-level.
+* Removed the [riverpodAwar`eGameProvider]. If required, this is better handled at the application-level.
 
 ## 3.0.0
 

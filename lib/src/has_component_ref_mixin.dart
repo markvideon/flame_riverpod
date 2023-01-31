@@ -15,11 +15,20 @@ mixin HasComponentRef on Component {
     await super.onLoad();
   }
 
-  void listen<T>(ProviderListenable<T> provider, void Function(T?, T) onChange,
-      {void Function(Object error, StackTrace stackTrace)? onError,}) {
-    _subscriptions.add(ref.listenManual<T>(provider, (p0, p1) {
-      onChange(p0, p1);
-    }, onError: onError,),);
+  void listen<T>(
+    ProviderListenable<T> provider,
+    void Function(T?, T) onChange, {
+    void Function(Object error, StackTrace stackTrace)? onError,
+  }) {
+    _subscriptions.add(
+      ref.listenManual<T>(
+        provider,
+        (p0, p1) {
+          onChange(p0, p1);
+        },
+        onError: onError,
+      ),
+    );
   }
 
   @override

@@ -36,12 +36,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      home: Row(crossAxisAlignment: CrossAxisAlignment.start, children: const [
-        Expanded(child: FlutterCountingComponent()),
-        Expanded(
+      home: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Expanded(child: FlutterCountingComponent()),
+          Expanded(
             child: RiverpodGameWidget.initialiseWithGame(
-                uninitialisedGame: RefExampleGame.new,),)
-      ],),
+              uninitialisedGame: RefExampleGame.new,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -61,9 +66,10 @@ class FlutterCountingComponent extends ConsumerWidget {
         children: [
           Text('Flutter', style: textStyle),
           stream.when(
-              data: (value) => Text('$value', style: textStyle),
-              error: (error, stackTrace) => Text('$error', style: textStyle),
-              loading: () => Text('Loading...', style: textStyle),)
+            data: (value) => Text('$value', style: textStyle),
+            error: (error, stackTrace) => Text('$error', style: textStyle),
+            loading: () => Text('Loading...', style: textStyle),
+          )
         ],
       ),
     );
@@ -88,8 +94,10 @@ class RefExampleGame extends FlameGame with HasComponentRef {
 class RiverpodGameWidget extends ConsumerStatefulWidget {
   const RiverpodGameWidget.readFromProvider({super.key})
       : uninitialisedGame = null;
-  const RiverpodGameWidget.initialiseWithGame(
-      {super.key, required this.uninitialisedGame,});
+  const RiverpodGameWidget.initialiseWithGame({
+    super.key,
+    required this.uninitialisedGame,
+  });
 
   final FlameGame Function(WidgetRef ref)? uninitialisedGame;
 
