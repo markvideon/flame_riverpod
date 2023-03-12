@@ -49,7 +49,7 @@ packages:
       name: flame
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.0"
   flame_lint:
     dependency: "direct dev"
     description:
@@ -63,7 +63,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "4.0.0"
+    version: "4.0.0+2"
   flutter:
     dependency: "direct main"
     description: flutter

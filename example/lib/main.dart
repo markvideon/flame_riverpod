@@ -41,8 +41,8 @@ class MyApp extends StatelessWidget {
         children: const [
           Expanded(child: FlutterCountingComponent()),
           Expanded(
-            child: RiverpodGameWidget.initialiseWithGame(
-              uninitialisedGame: RefExampleGame.new,
+            child: RiverpodGameWidget.initializeWithGame(
+              uninitializedGame: RefExampleGame.new,
             ),
           )
         ],
@@ -56,8 +56,10 @@ class FlutterCountingComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textStyle =
-        Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white);
+    final textStyle = Theme.of(context)
+        .textTheme
+        .headlineSmall
+        ?.copyWith(color: Colors.white);
 
     final stream = ref.watch(countingStreamProvider);
     return Material(
@@ -93,13 +95,13 @@ class RefExampleGame extends FlameGame with HasComponentRef {
 
 class RiverpodGameWidget extends ConsumerStatefulWidget {
   const RiverpodGameWidget.readFromProvider({super.key})
-      : uninitialisedGame = null;
-  const RiverpodGameWidget.initialiseWithGame({
+      : uninitializedGame = null;
+  const RiverpodGameWidget.initializeWithGame({
     super.key,
-    required this.uninitialisedGame,
+    required this.uninitializedGame,
   });
 
-  final FlameGame Function(WidgetRef ref)? uninitialisedGame;
+  final FlameGame Function(WidgetRef ref)? uninitializedGame;
 
   @override
   ConsumerState<RiverpodGameWidget> createState() => _RiverpodGameWidgetState();
@@ -109,10 +111,10 @@ class _RiverpodGameWidgetState extends ConsumerState<RiverpodGameWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.uninitialisedGame is FlameGame Function(WidgetRef ref)) {
+      if (widget.uninitializedGame is FlameGame Function(WidgetRef ref)) {
         ref
             .read(riverpodAwareGameProvider.notifier)
-            .set(widget.uninitialisedGame!(ref));
+            .set(widget.uninitializedGame!(ref));
       }
     });
     super.initState();
@@ -135,7 +137,7 @@ class RiverpodAwareTextComponent extends PositionComponent
   late TextComponent textComponent;
   int currentValue = 0;
 
-  /// [onMount] should be used over [onLoad] to initialise subscriptions,
+  /// [onMount] should be used over [onLoad] to initialize subscriptions,
   /// cancellation is handled for the user inside [onRemove],
   /// which is only called if the [Component] was mounted.
   @override
