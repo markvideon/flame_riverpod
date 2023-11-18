@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:flame_riverpod/src/component_ref.dart';
+import 'package:flame_riverpod/src/v4/component_ref.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// The [HasComponentRef] mixin is a bridge between a FlameGame and a
@@ -12,11 +12,6 @@ mixin HasComponentRef on Component {
   static set widgetRef(WidgetRef value) => _reference = ComponentRef(value);
 
   final List<ProviderSubscription> _subscriptions = [];
-
-  @override
-  Future<void> onLoad() async {
-    await super.onLoad();
-  }
 
   void listen<T>(
     ProviderListenable<T> provider,

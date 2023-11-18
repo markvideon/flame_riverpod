@@ -1,5 +1,5 @@
 import 'package:flame/game.dart';
-import 'package:flame_riverpod_example/main.dart';
+import 'package:flame_riverpod_example/v4/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -59,8 +59,12 @@ void main() {
     // Check components are mounted as expected.
     expect(gameWidget.game?.children.isNotEmpty ?? false, true);
 
+    gameWidget.game?.children.forEach((element) {
+
+      print(element.runtimeType);
+    });
     final riverpodAwareTextComponent =
-        gameWidget.game?.children.elementAt(1) as RiverpodAwareTextComponent?;
+        gameWidget.game?.children.elementAt(2) as RiverpodAwareTextComponent?;
     expect(riverpodAwareTextComponent is RiverpodAwareTextComponent, true);
 
     // Current count of the stream from the [Text] widget. This is best
