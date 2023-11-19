@@ -122,9 +122,9 @@ class RiverpodAwareGameWidgetState<T extends Game> extends GameWidgetState<T>
   }
 
   @override
-  void listen<T>(
-    ProviderListenable<T> provider,
-    void Function(T? previous, T value) listener, {
+  void listen<U>(
+    ProviderListenable<U> provider,
+    void Function(U? previous, U value) listener, {
     void Function(Object error, StackTrace stackTrace)? onError,
   }) {
     _assertNotDisposed();
@@ -136,7 +136,7 @@ class RiverpodAwareGameWidgetState<T extends Game> extends GameWidgetState<T>
     // We can't implement a fireImmediately flag because we wouldn't know
     // which listen call was preserved between widget rebuild, and we wouldn't
     // want to call the listener on every rebuild.
-    final sub = _container.listen<T>(provider, listener, onError: onError);
+    final sub = _container.listen<U>(provider, listener, onError: onError);
     _listeners.add(sub);
   }
 

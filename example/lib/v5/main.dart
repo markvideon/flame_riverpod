@@ -2,28 +2,13 @@ import 'dart:async';
 
 import 'package:flame/components.dart' hide Timer;
 import 'package:flame/game.dart';
-import 'package:flutter/material.dart';
 import 'package:flame_riverpod/flame_riverpod.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final countingStreamProvider = StreamProvider<int>((ref) {
   return Stream.periodic(const Duration(seconds: 1), (inc) => inc);
 });
-
-/// Simple provider that returns a [FlameGame] instance.
-final riverpodAwareGameProvider =
-    StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
-  return RiverpodAwareGameNotifier();
-});
-
-/// Simple [StateNotifier] that holds the current [FlameGame] instance.
-class RiverpodAwareGameNotifier extends StateNotifier<FlameGame?> {
-  RiverpodAwareGameNotifier() : super(null);
-
-  void set(FlameGame candidate) {
-    state = candidate;
-  }
-}
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -96,30 +81,28 @@ class RiverpodAwareTextComponent extends PositionComponent
     with RiverpodComponentMixin {
   late TextComponent textComponent;
   int currentValue = 0;
-  ComponentKey key = ComponentKey.unique();
-
-  @override
-  void onLoad() {
-    // TODO: implement onLoad
-    super.onLoad();
-
-  }
-  void listenToCount() {
-    ref.listen(countingStreamProvider, (p0, p1) {
-      if (p1.hasValue) {
-        currentValue = p1.value!;
-        textComponent.text = '$currentValue';
-      }
-    });
-  }
 
   /// [onMount] should be used over [onLoad] to initialize subscriptions,
   /// cancellation is handled for the user inside [onRemove],
   /// which is only called if the [Component] was mounted.
-
+  ///
+  /// [RiverpodComponentMixin.addToGameWidgetBuild] **must** be invoked in
+  /// your Component **before** [RiverpodComponentMixin.onMount] in order to
+  /// have the provided function invoked on
+  /// [RiverpodAwareGameWidgetState.build].
+  ///
+  /// From `flame_riverpod` 5.0.0, [WidgetRef.watch], is also accessible from
+  /// components.
   @override
   void onMount() {
-    addToGameWidgetBuild(listenToCount);
+    addToGameWidgetBuild(() {
+      ref.listen(countingStreamProvider, (p0, p1) {
+        if (p1.hasValue) {
+          currentValue = p1.value!;
+          textComponent.text = '$currentValue';
+        }
+      });
+    });
     super.onMount();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
   }

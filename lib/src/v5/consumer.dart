@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class NewComponentRef implements WidgetRef {
   NewComponentRef({required this.game});
 
-  /// Reference to the game this component is on.
   RiverpodGameMixin? game;
 
   @override
@@ -71,7 +70,12 @@ mixin RiverpodComponentMixin on Component {
   final NewComponentRef ref = NewComponentRef(game: null);
   final List<Function()> _onBuildCallbacks = [];
 
+  /// Whether to immediately call [RiverpodAwareGameWidgetState.build] when
+  /// this component is mounted.
   bool rebuildOnMountWhen(NewComponentRef ref) => true;
+
+  /// Whether to immediately call [RiverpodAwareGameWidgetState.build] when
+  /// this component is removed.
   bool rebuildOnRemoveWhen(NewComponentRef ref) => true;
 
   @mustCallSuper
@@ -124,10 +128,17 @@ mixin RiverpodComponentMixin on Component {
 }
 
 mixin RiverpodGameMixin on FlameGame {
+  /// [GlobalKey] associated with the [RiverpodAwareGameWidget] that this game
+  /// was provided to.
+  ///
+  /// Used to facilitate [Component] access to the [ProviderContainer].
   GlobalKey<RiverpodAwareGameWidgetState>? key;
 
-  final List<Function()> _onBuildCallbacks = [];
+  final List<void Function()> _onBuildCallbacks = [];
 
+  /// Invoked in [RiverpodAwareGameWidgetState.build]. Each callback is
+  /// expected to consist of calls to methods implemented in [WidgetRef].
+  /// E.g. [WidgetRef.watch], [WidgetRef.listen], etc.
   void onBuild() {
     for (final callback in _onBuildCallbacks) {
       callback.call();
