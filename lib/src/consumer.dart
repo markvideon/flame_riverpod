@@ -4,8 +4,8 @@ import 'package:flame_riverpod/src/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NewComponentRef implements WidgetRef {
-  NewComponentRef({required this.game});
+class ComponentRef implements WidgetRef {
+  ComponentRef({required this.game});
 
   RiverpodGameMixin? game;
 
@@ -67,16 +67,16 @@ class NewComponentRef implements WidgetRef {
 }
 
 mixin RiverpodComponentMixin on Component {
-  final NewComponentRef ref = NewComponentRef(game: null);
+  final ComponentRef ref = ComponentRef(game: null);
   final List<Function()> _onBuildCallbacks = [];
 
   /// Whether to immediately call [RiverpodAwareGameWidgetState.build] when
   /// this component is mounted.
-  bool rebuildOnMountWhen(NewComponentRef ref) => true;
+  bool rebuildOnMountWhen(ComponentRef ref) => true;
 
   /// Whether to immediately call [RiverpodAwareGameWidgetState.build] when
   /// this component is removed.
-  bool rebuildOnRemoveWhen(NewComponentRef ref) => true;
+  bool rebuildOnRemoveWhen(ComponentRef ref) => true;
 
   @mustCallSuper
   @override
