@@ -3,18 +3,18 @@ import 'package:flame_riverpod/flame_riverpod.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RiverpodAwareGameWidget extends GameWidget {
+class RiverpodAwareGameWidget<T extends Game> extends GameWidget<T> {
   RiverpodAwareGameWidget({required super.game, required this.key}) :
         super(key: key);
 
   @override
-  GlobalKey<RiverpodAwareGameWidgetState> key;
+  final GlobalKey<RiverpodAwareGameWidgetState<T>> key;
 
   @override
-  GameWidgetState createState() => RiverpodAwareGameWidgetState();
+  GameWidgetState<T> createState() => RiverpodAwareGameWidgetState<T>();
 }
 
-class RiverpodAwareGameWidgetState extends GameWidgetState
+class RiverpodAwareGameWidgetState<T extends Game> extends GameWidgetState<T>
     implements WidgetRef {
   RiverpodGameMixin get game => widget.game! as RiverpodGameMixin;
 
@@ -33,13 +33,13 @@ class RiverpodAwareGameWidgetState extends GameWidgetState
   @override
   void initState() {
     super.initState();
-    game.key = (widget as RiverpodAwareGameWidget).key;
+    game.key = (widget as RiverpodAwareGameWidget<T>).key;
   }
 
   @override
-  void didUpdateWidget(covariant GameWidget<Game> oldWidget) {
+  void didUpdateWidget(covariant GameWidget<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    game.key = (widget as RiverpodAwareGameWidget).key;
+    game.key = (widget as RiverpodAwareGameWidget<T>).key;
   }
 
   @override
@@ -58,7 +58,7 @@ class RiverpodAwareGameWidgetState extends GameWidgetState
   @override
   void dispose() {
     // Below comments are from the implementation of ConsumerStatefulWidget:
-    //
+
     // Calling `super.unmount()` will call `dispose` on the state
     // And [ListenManual] subscriptions should be closed after `dispose`
     super.dispose();
@@ -80,7 +80,6 @@ class RiverpodAwareGameWidgetState extends GameWidgetState
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('RiverpodAwareGameWidgetState build');
     // TODO disallow didChangeDependencies
     try {
       _oldDependencies = _dependencies;
@@ -148,7 +147,7 @@ class RiverpodAwareGameWidgetState extends GameWidgetState
   }
 
   @override
-  T read<T>(ProviderListenable<T> provider) {
+  Res read<Res>(ProviderListenable<Res> provider) {
     _assertNotDisposed();
     return ProviderScope.containerOf(context, listen: false).read(provider);
   }
@@ -166,9 +165,9 @@ class RiverpodAwareGameWidgetState extends GameWidgetState
   }
 
   @override
-  ProviderSubscription<T> listenManual<T>(
-    ProviderListenable<T> provider,
-    void Function(T? previous, T next) listener, {
+  ProviderSubscription<Res> listenManual<Res>(
+    ProviderListenable<Res> provider,
+    void Function(Res? previous, Res next) listener, {
     void Function(Object error, StackTrace stackTrace)? onError,
     bool fireImmediately = false,
   }) {
