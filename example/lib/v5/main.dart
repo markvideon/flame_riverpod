@@ -12,7 +12,7 @@ final countingStreamProvider = StreamProvider<int>((ref) {
 
 /// Simple provider that returns a [FlameGame] instance.
 final riverpodAwareGameProvider =
-StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
+    StateNotifierProvider<RiverpodAwareGameNotifier, FlameGame?>((ref) {
   return RiverpodAwareGameNotifier();
 });
 
@@ -31,7 +31,7 @@ void main() {
 
 final gameInstance = RefExampleGame();
 final GlobalKey<RiverpodAwareGameWidgetState> gameWidgetKey =
-  GlobalKey<RiverpodAwareGameWidgetState>();
+    GlobalKey<RiverpodAwareGameWidgetState>();
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -92,13 +92,18 @@ class RefExampleGame extends FlameGame with RiverpodGameMixin {
   }
 }
 
-
 class RiverpodAwareTextComponent extends PositionComponent
     with RiverpodComponentMixin {
   late TextComponent textComponent;
   int currentValue = 0;
   ComponentKey key = ComponentKey.unique();
 
+  @override
+  void onLoad() {
+    // TODO: implement onLoad
+    super.onLoad();
+
+  }
   void listenToCount() {
     ref.listen(countingStreamProvider, (p0, p1) {
       if (p1.hasValue) {
@@ -108,24 +113,14 @@ class RiverpodAwareTextComponent extends PositionComponent
     });
   }
 
-
   /// [onMount] should be used over [onLoad] to initialize subscriptions,
   /// cancellation is handled for the user inside [onRemove],
   /// which is only called if the [Component] was mounted.
+
   @override
   void onMount() {
+    addToGameWidgetBuild(listenToCount);
     super.onMount();
     add(textComponent = TextComponent(position: position + Vector2(0, 27)));
-
-    // "Watch" a provider using [listen] from the [HasComponentRef] mixin.
-    // Watch is not exposed directly as this would rebuild the ancestor that
-    // exposes the [WidgetRef] unnecessarily.
-    addToGameWidgetBuild(listenToCount);
-  }
-
-  @override
-  void onRemove() {
-    removeFromGameWidgetBuild(listenToCount);
-    super.onRemove();
   }
 }

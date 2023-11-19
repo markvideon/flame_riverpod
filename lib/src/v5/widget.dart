@@ -4,8 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RiverpodAwareGameWidget<T extends Game> extends GameWidget<T> {
-  RiverpodAwareGameWidget({required super.game, required this.key}) :
-        super(key: key);
+  RiverpodAwareGameWidget({required super.game, required this.key})
+      : super(key: key);
 
   @override
   final GlobalKey<RiverpodAwareGameWidgetState<T>> key;

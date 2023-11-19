@@ -59,10 +59,6 @@ void main() {
     // Check components are mounted as expected.
     expect(gameWidget.game?.children.isNotEmpty ?? false, true);
 
-    gameWidget.game?.children.forEach((element) {
-
-      print(element.runtimeType);
-    });
     final riverpodAwareTextComponent =
         gameWidget.game?.children.elementAt(2) as RiverpodAwareTextComponent?;
     expect(riverpodAwareTextComponent is RiverpodAwareTextComponent, true);

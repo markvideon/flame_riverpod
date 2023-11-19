@@ -4,22 +4,17 @@ import 'package:flame_riverpod/src/v5/widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// Two outstanding problems with the same root cause:
-// Context may not be available when methods are invoked.:
-// - When listen, watch are called, subscriptions may not be
-//   registered with ProviderContainer
-// - When watch, read etc are called, a non-null result can not be returned
 class NewComponentRef implements WidgetRef {
-  NewComponentRef(this.game);
+  NewComponentRef({required this.game});
 
   /// Reference to the game this component is on.
-  RiverpodGameMixin game;
+  RiverpodGameMixin? game;
 
   @override
-  BuildContext get context => game.buildContext!;
+  BuildContext get context => game!.buildContext!;
 
   RiverpodAwareGameWidgetState? get _container {
-    return game.key?.currentState;
+    return game?.key?.currentState;
   }
 
   @override
@@ -73,82 +68,71 @@ class NewComponentRef implements WidgetRef {
 }
 
 mixin RiverpodComponentMixin on Component {
-  late NewComponentRef ref;
+  final NewComponentRef ref = NewComponentRef(game: null);
+  final List<Function()> _onBuildCallbacks = [];
 
+  bool rebuildOnMountWhen(NewComponentRef ref) => true;
+  bool rebuildOnRemoveWhen(NewComponentRef ref) => true;
+
+  @mustCallSuper
   @override
   void onLoad() {
-    ref = NewComponentRef(findGame()! as RiverpodGameMixin);
+    ref.game = findGame()! as RiverpodGameMixin;
     super.onLoad();
-  }
-
-  void onGameAttach(Function() cb) {
-    (findGame()! as RiverpodGameMixin)._onAttachCallbacks.add(cb);
   }
 
   /// Adds a callback method to be invoked in the build method of
   /// [RiverpodAwareGameWidgetState].
-  ///
-  /// The `fireAsap` parameter is used to determine whether the build method of
-  /// [RiverpodAwareGameWidgetState] should be invoked immediately after
-  /// `cb` has been added to the list of callbacks executed inside the build
-  /// method of [RiverpodAwareGameWidgetState].
-  void addToGameWidgetBuild(Function() cb, {bool fireAsap = true}) {
-    final game = findGame()! as RiverpodGameMixin;
-    debugPrint(
-        'onGameWidgetBuild, callback length: ${game._onBuildCallbacks.length}');
-    game._onBuildCallbacks.add(cb);
+  void addToGameWidgetBuild(Function() cb) {
+    _onBuildCallbacks.add(cb);
+  }
 
-    if (game.isMounted && fireAsap) {
-      game.key!.currentState!.forceBuild();
+  @mustCallSuper
+  @override
+  void onMount() {
+    super.onMount();
+    ref.game!._onBuildCallbacks.addAll(_onBuildCallbacks);
+
+    if (rebuildOnMountWhen(ref) == true) {
+      rebuildGameWidget();
+    }
+  }
+
+  @mustCallSuper
+  @override
+  void onRemove() {
+    // Remove this component's onBuild callbacks from the GameWidget
+    _onBuildCallbacks.forEach(ref.game!._onBuildCallbacks.remove);
+
+    // Force build to flush dependencies
+    if (rebuildOnRemoveWhen(ref) == true) {
+      rebuildGameWidget();
     }
 
-    debugPrint(
-        'onGameWidgetBuild, callback length: ${game._onBuildCallbacks.length}');
+    // Clear game reference as the component is no longer mounted to this game
+    ref.game = null;
+
+    super.onRemove();
   }
 
-  void removeFromGameWidgetBuild(Function() cb) {
-    (findGame()! as RiverpodGameMixin)._onBuildCallbacks.remove(cb);
-  }
-
-  void onGameDetach(Function() cb) {
-    (findGame()! as RiverpodGameMixin)._onDetachCallbacks.add(cb);
+  void rebuildGameWidget() {
+    assert(ref.game!.isMounted == true);
+    if (ref.game!.isMounted) {
+      ref.game!.key!.currentState!.forceBuild();
+    }
   }
 }
 
 mixin RiverpodGameMixin on FlameGame {
   GlobalKey<RiverpodAwareGameWidgetState>? key;
 
-  final List<Function()> _onAttachCallbacks = [];
   final List<Function()> _onBuildCallbacks = [];
-  final List<Function()> _onDetachCallbacks = [];
-
-  @override
-  void onAttach() {
-    super.onAttach();
-    for (final callback in _onAttachCallbacks) {
-      callback.call();
-    }
-  }
-
-  @override
-  void onDispose() {
-    // TODO: implement onDispose
-    super.onDispose();
-  }
 
   void onBuild() {
-    debugPrint(
-        'RiverpodGameMixin onBuild. Callbacks: ${_onBuildCallbacks.length}');
     for (final callback in _onBuildCallbacks) {
       callback.call();
     }
   }
 
-  @override
-  void onDetach() {
-    for (final callback in _onDetachCallbacks) {
-      callback.call();
-    }
-    super.onDetach();
-  }
+  bool get hasBuildCallbacks => _onBuildCallbacks.isNotEmpty;
 }
