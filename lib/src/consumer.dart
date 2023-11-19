@@ -108,6 +108,10 @@ mixin RiverpodComponentMixin on Component {
     // Remove this component's onBuild callbacks from the GameWidget
     _onBuildCallbacks.forEach(ref.game!._onBuildCallbacks.remove);
 
+    // Clear the local store of build callbacks - if the component is
+    // re-mounted, it would be undesirable to double-up.
+    _onBuildCallbacks.clear();
+
     // Force build to flush dependencies
     if (rebuildOnRemoveWhen(ref) == true) {
       rebuildGameWidget();
