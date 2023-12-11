@@ -1,3 +1,11 @@
+# flame_riverpod is now part of the Flame Engine!
+
+Version 5.0.0 was the last release of the package published under markvideon.dev. The package is now an officially supported package by the Flame Engine team and has a new home [here](https://github.com/flame-engine/flame/tree/main/packages/flame_riverpod).
+
+As a consequence, this repository is now archived.
+
+---
+
 # flame_riverpod
 
 Riverpod is a reactive caching and data-binding framework for Dart & Flutter.
